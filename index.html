@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>تحدي الأسئلة الممتعة - Premium Quiz Game</title>
+  <!-- Font Awesome for sleek crisp game icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <!-- Responsive Game Container -->
+  <div class="phone-mockup">
+
+    <!-- Background animations -->
+    <div class="stars-bg">
+      <div class="star"></div>
+      <div class="star"></div>
+      <div class="star"></div>
+      <div class="star"></div>
+      <div class="star"></div>
+      <div class="star"></div>
+      <div class="floating-shape shape-1"></div>
+      <div class="floating-shape shape-2"></div>
+    </div>
+
+    <!-- Cute Clouds at the bottom -->
+    <div class="clouds-bg-bottom">
+      <div class="cloud-bubble"></div>
+      <div class="cloud-bubble"></div>
+      <div class="cloud-bubble"></div>
+      <div class="cloud-bubble"></div>
+    </div>
+
+    <!-- Canvas for Confetti particle effects on Victory Screen -->
+    <canvas id="confetti-canvas"></canvas>
+
+    <!-- ========================================================
+         SCREEN 1: MAIN SCREEN (screen-main)
+         ======================================================== -->
+    <div id="screen-main" class="screen-container active">
+
+      <!-- Logo and Ribbon Header Group -->
+      <div class="logo-header-group">
+        <div class="logo-container">
+          <div class="logo-decoration deco-bulb"><i class="fa-solid fa-lightbulb" style="color: #FFD12D;"></i></div>
+          <div class="logo-decoration deco-chat"><i class="fa-solid fa-comment-dots" style="color: #00E5FF;"></i></div>
+          <div class="logo-decoration deco-star1"><i class="fa-solid fa-star" style="color: #FFEB3B;"></i></div>
+          <div class="logo-decoration deco-star2"><i class="fa-solid fa-star" style="color: #FFEB3B;"></i></div>
+          <img src="assets/logo.png" alt="Quiz Logo" class="logo-main-img">
+        </div>
+        <img id="ribbon-ar-img" src="assets/ribbon-purple.png" alt="تحدي معلوماتك!" class="ribbon-main-banner-img">
+        <div id="ribbon-en-text" class="ribbon-banner ribbon-purple"
+          style="display: none; margin-top: -30px; margin-bottom: 15px;">
+          Trivia Challenge!
+          <span class="ribbon-banner-fold ribbon-banner-fold-left"></span>
+          <span class="ribbon-banner-fold ribbon-banner-fold-right"></span>
+        </div>
+      </div>
+
+      <div class="main-content">
+        <div class="main-buttons-group">
+          <!-- Button Start Play -->
+          <button id="btn-start-play" class="btn-game btn-yellow">
+            ابدأ اللعب
+          </button>
+
+          <!-- Button Settings directly -->
+          <button id="btn-open-settings" class="btn-game btn-green">
+            الإعدادات
+          </button>
+        </div>
+      </div>
+
+
+
+    </div>
+
+    <!-- ========================================================
+         SCREEN 2: GAME MODES SCREEN (screen-modes)
+         ======================================================== -->
+    <div id="screen-modes" class="screen-container">
+
+      <!-- Top HUD Panel (Consistent with game layout) -->
+      <div class="top-hud">
+        <div class="hud-item">
+          <div id="modes-hearts-container" class="hud-hearts">
+            <i class="fa-solid fa-heart heart-red"></i>
+            <i class="fa-solid fa-heart heart-red"></i>
+            <i class="fa-solid fa-heart heart-red"></i>
+          </div>
+        </div>
+        <div class="progress-hud">
+          <i class="fa-solid fa-bolt hud-energy-icon"></i>
+          <div class="progress-fill" style="width: 100%;"></div>
+          <div class="hud-q-icon"><i class="fa-solid fa-question"></i></div>
+        </div>
+        <div class="hud-item">
+          <span id="modes-coins-count">200</span>
+          <div class="hud-icon"><i class="fa-solid fa-coins coin-gold"></i></div>
+          <div class="hud-btn-plus"><i class="fa-solid fa-plus"></i></div>
+        </div>
+      </div>
+
+      <div class="screen-header" style="margin-top: 10px;">
+        <button class="btn-circle btn-back-to-main"><i class="fa-solid fa-arrow-right"></i></button>
+        <h2 id="modes-title" class="game-title-md">اختر نمط اللعب</h2>
+        <div style="width: 52px;"></div> <!-- placeholder for spacing balance -->
+      </div>
+
+      <div class="modes-list">
+
+        <!-- Mode 1: General Quiz -->
+        <div id="mode-card-quiz" class="mode-card mode-quiz">
+          <div class="mode-content">
+            <h3 id="mode-quiz-title" class="mode-title">لعبة الأسئلة</h3>
+          </div>
+          <div class="mode-img-wrapper">
+            <img src="assets/cube.png" alt="Quiz cube" class="mode-img">
+          </div>
+        </div>
+
+        <!-- Mode 2: Who Am I Detective Game -->
+        <div id="mode-card-whoami" class="mode-card mode-whoami">
+          <div class="mode-content">
+            <h3 id="mode-whoami-title" class="mode-title">من أنا؟</h3>
+          </div>
+          <div class="mode-img-wrapper">
+            <img src="assets/detective.png" alt="Detective character" class="mode-img">
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- ========================================================
+         SCREEN 3: QUIZ GAMEPLAY SCREEN (screen-quiz)
+         ======================================================== -->
+    <div id="screen-quiz" class="screen-container">
+
+      <!-- Top HUD Panel -->
+      <div class="top-hud">
+        <div class="hud-item">
+          <!-- Container for dynamic heart icons -->
+          <div id="quiz-hearts-container" class="hud-hearts">
+            <i class="fa-solid fa-heart heart-red"></i>
+            <i class="fa-solid fa-heart heart-red"></i>
+            <i class="fa-regular fa-heart heart-empty" style="color:#5a3cbd; margin-right: 2px;"></i>
+          </div>
+          <!-- Hidden fallback count for old code compatibility -->
+          <span id="quiz-hearts-count" style="display: none;">3</span>
+        </div>
+        <div class="progress-hud">
+          <i class="fa-solid fa-bolt hud-energy-icon"></i>
+          <div id="quiz-progress-bar" class="progress-fill" style="width: 60%;"></div>
+          <div class="hud-q-icon"><i class="fa-solid fa-question"></i></div>
+        </div>
+        <div class="hud-item">
+          <span id="quiz-coins-count">200</span>
+          <div class="hud-icon"><i class="fa-solid fa-coins coin-gold"></i></div>
+          <div class="hud-btn-plus"><i class="fa-solid fa-plus"></i></div>
+        </div>
+      </div>
+
+      <!-- Question and Answers Area (Scrollable to fit well) -->
+      <div class="quiz-scroll-container">
+
+        <div class="question-card">
+          <!-- Stylized Japan / Mount Fuji cartoon illustration -->
+          <div class="quiz-illustration-box">
+            <img src="assets/japan.png" alt="Japan Fuji illustration">
+          </div>
+          <div id="quiz-question-text" class="question-text">
+            ما هي عاصمة اليابان؟
+          </div>
+        </div>
+
+        <!-- 4 Multiple Choice options matching mockup -->
+        <div class="options-grid">
+          <button id="btn-option-0" class="btn-option" data-correct="false">
+            <span>كيوتو</span>
+            <span class="btn-option-indicator"><i class="fa-solid fa-check"></i></span>
+          </button>
+
+          <button id="btn-option-1" class="btn-option" data-correct="false">
+            <span>أوساكا</span>
+            <span class="btn-option-indicator"><i class="fa-solid fa-check"></i></span>
+          </button>
+
+          <button id="btn-option-2" class="btn-option" data-correct="true">
+            <span>طوكيو</span>
+            <span class="btn-option-indicator"><i class="fa-solid fa-check"></i></span>
+          </button>
+
+          <button id="btn-option-3" class="btn-option" data-correct="false">
+            <span>هيروشيما</span>
+            <span class="btn-option-indicator"><i class="fa-solid fa-check"></i></span>
+          </button>
+        </div>
+
+        <!-- Helpers Toolbar matching mockup exactly -->
+        <div class="helpers-bar">
+          <div class="btn-helper-container">
+            <button id="helper-5050" class="btn-helper">
+              <i class="fa-solid fa-scale-balanced"></i>
+            </button>
+            <span>50:50</span>
+          </div>
+          <div class="btn-helper-container">
+            <button id="helper-audience" class="btn-helper">
+              <i class="fa-solid fa-users"></i>
+            </button>
+            <span id="helper-audience-lbl">الجمهور</span>
+          </div>
+          <div class="btn-helper-container">
+            <button id="helper-skip" class="btn-helper">
+              <i class="fa-solid fa-rotate-right"></i>
+            </button>
+            <span id="helper-skip-lbl">تخطي</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Back / Exit button at bottom -->
+      <div style="display:flex; justify-content:center; margin-top: auto; padding-top: 10px;">
+        <button class="btn-circle btn-back-to-modes"><i class="fa-solid fa-arrow-right"></i></button>
+      </div>
+
+    </div>
+
+    <!-- ========================================================
+         SCREEN 4: WHO AM I SCREEN (screen-whoami)
+         ======================================================== -->
+    <div id="screen-whoami" class="screen-container">
+
+      <!-- Top HUD Panel -->
+      <div class="top-hud">
+        <div class="hud-item">
+          <div id="whoami-hearts-container" class="hud-hearts">
+            <i class="fa-solid fa-heart heart-red"></i>
+            <i class="fa-solid fa-heart heart-red"></i>
+            <i class="fa-solid fa-heart heart-red"></i>
+          </div>
+          <!-- Hidden fallback count for old code compatibility -->
+          <span id="whoami-hearts-count" style="display: none;">3</span>
+        </div>
+        <div class="progress-hud">
+          <i class="fa-solid fa-bolt hud-energy-icon"></i>
+          <div id="whoami-progress-bar" class="progress-fill" style="width: 30%;"></div>
+          <div class="hud-q-icon"><i class="fa-solid fa-question"></i></div>
+        </div>
+        <div class="hud-item">
+          <span id="whoami-coins-count">200</span>
+          <div class="hud-icon"><i class="fa-solid fa-coins coin-gold"></i></div>
+          <div class="hud-btn-plus"><i class="fa-solid fa-plus"></i></div>
+        </div>
+      </div>
+
+      <div class="screen-header" style="margin-top: 5px; margin-bottom: 10px;">
+        <button class="btn-circle btn-back-to-modes"><i class="fa-solid fa-arrow-right"></i></button>
+        <h2 id="whoami-title" class="game-title-md">من أنا؟</h2>
+        <div style="width: 52px;"></div> <!-- placeholder for spacing balance -->
+      </div>
+
+      <!-- Detective Mystery Clues Card (Yellow Sticky Note) -->
+      <div class="clue-paper-card">
+        <div id="whoami-clue-title" class="clue-title">
+          أنا عالم؟
+        </div>
+
+        <div class="clue-text-list">
+          <div class="clue-item">أنا عالم رياضيات وفيزياء شهير.</div>
+          <div class="clue-item">اكتشفت قانون الجاذبية العام عندما سقطت التفاحة على رأسي.</div>
+        </div>
+      </div>
+
+      <!-- Answer Inputs -->
+      <input type="text" id="whoami-input" class="input-answer-field" placeholder="اكتب اسم الشخصية هنا..."
+        autocomplete="off">
+
+      <div class="whoami-actions">
+        <!-- Submit Button -->
+        <button id="whoami-btn-submit" class="btn-game btn-green">
+          إرسال الإجابة
+        </button>
+
+        <!-- Hint Button -->
+        <button id="whoami-btn-hint" class="btn-game btn-purple">
+          <i class="fa-solid fa-lightbulb"></i>
+          <span id="whoami-hint-text">تلميح</span>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- ========================================================
+         SCREEN 5: VICTORY SCREEN (screen-victory)
+         ======================================================== -->
+    <div id="screen-victory" class="screen-container">
+
+      <div class="victory-scroll">
+        <!-- Huge Golden Trophy with light ray animations -->
+        <div class="trophy-container">
+          <div class="light-rays"></div>
+          <img src="https://i.ibb.co/KxQzRBbf/1bdd63eb-ad4c-4828-8fdd-1d0a946d6e38-removebg-preview.png" alt="Golden trophy" class="trophy-img">
+        </div>
+
+        <img id="victory-ribbon-ar-img" src="https://i.ibb.co/CsDP5p5t/2ec759f8-2bc0-4a6a-af7b-53ff30773cd9-removebg-preview.png" alt="أحسنت!" class="ribbon-main-banner-img"
+          style="margin: 10px auto 15px auto;">
+        <div id="victory-ribbon-en-text" class="ribbon-banner ribbon-red"
+          style="display: none; margin: 10px auto 15px auto;">
+          <span id="victory-ribbon-text">Well Done!</span>
+          <span class="ribbon-banner-fold ribbon-banner-fold-left"></span>
+          <span class="ribbon-banner-fold ribbon-banner-fold-right"></span>
+        </div>
+
+        <!-- Score progress circular badge -->
+        <div class="victory-score-circle">
+          <span>8/10</span>
+          <span id="victory-score-lbl" class="victory-score-lbl">النقاط</span>
+        </div>
+
+        <!-- Statistics grid matching mockup coins, check, wrong badges -->
+        <div class="stats-grid">
+          <div class="stat-box">
+            <div class="stat-icon-wrapper bg-gold-circle"><i class="fa-solid fa-coins"></i></div>
+            <div id="victory-stat-coins" class="stat-val">+50</div>
+            <div id="victory-lbl-coins" class="stat-lbl">العملات</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-icon-wrapper bg-green-circle"><i class="fa-solid fa-check"></i></div>
+            <div id="victory-stat-correct" class="stat-val">8</div>
+            <div id="victory-lbl-check" class="stat-lbl">صحيح</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-icon-wrapper bg-red-circle"><i class="fa-solid fa-xmark"></i></div>
+            <div id="victory-stat-wrong" class="stat-val">2</div>
+            <div id="victory-lbl-wrong" class="stat-lbl">خطأ</div>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="victory-buttons">
+          <button id="victory-btn-replay" class="btn-game btn-yellow">
+            Replay
+          </button>
+
+          <button id="victory-btn-home" class="btn-game btn-purple">
+            Home
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ========================================================
+         SCREEN 6: SETTINGS SCREEN (screen-settings)
+         ======================================================== -->
+    <div id="screen-settings" class="screen-container">
+
+      <div class="screen-header">
+        <button class="btn-circle btn-back-to-main"><i class="fa-solid fa-arrow-right"></i></button>
+        <h2 id="settings-title" class="game-title-md">الإعدادات</h2>
+        <div style="width: 52px;"></div> <!-- placeholder for layout balance -->
+      </div>
+
+      <div class="settings-scroll">
+
+        <!-- Profile Card -->
+        <div class="profile-card">
+          <div class="profile-avatar-wrapper">
+            <img src="assets/avatar.png" alt="User profile avatar" class="profile-avatar-img">
+            <div class="profile-edit-badge"><i class="fa-solid fa-crown"></i></div>
+          </div>
+          <div class="profile-info">
+            <div class="profile-name-row">
+              <div id="settings-profile-name" class="profile-name">زيرو</div>
+              <div class="profile-lvl-star">
+                <i class="fa-solid fa-star"></i>
+                <span id="settings-profile-lvl">1</span>
+              </div>
+            </div>
+            <div class="xp-bar-container">
+              <div class="xp-bar-fill" style="width: 45%;"></div>
+            </div>
+            <span id="settings-xp-lbl" class="xp-lbl">المستوى 1 - 450 / 1000 XP</span>
+          </div>
+        </div>
+
+        <!-- Settings Options list -->
+        <div class="settings-list">
+
+          <!-- Setting 1: Music toggle -->
+          <div class="settings-row">
+            <div class="settings-row-info">
+              <div class="settings-row-icon icon-purple"><i class="fa-solid fa-music"></i></div>
+              <span id="settings-music-lbl" class="settings-row-lbl">الموسيقى الخلفية</span>
+            </div>
+            <label class="switch-control">
+              <input type="checkbox" id="settings-toggle-music" checked>
+              <span class="switch-slider"></span>
+            </label>
+          </div>
+
+          <!-- Setting 2: SFX toggle -->
+          <div class="settings-row">
+            <div class="settings-row-info">
+              <div class="settings-row-icon icon-teal"><i class="fa-solid fa-volume-high"></i></div>
+              <span id="settings-sfx-lbl" class="settings-row-lbl">المؤثرات الصوتية</span>
+            </div>
+            <label class="switch-control">
+              <input type="checkbox" id="settings-toggle-sfx" checked>
+              <span class="switch-slider"></span>
+            </label>
+          </div>
+
+          <!-- Setting 3: Push Notifications -->
+          <div class="settings-row">
+            <div class="settings-row-info">
+              <div class="settings-row-icon icon-yellow"><i class="fa-solid fa-bell"></i></div>
+              <span id="settings-notifs-lbl" class="settings-row-lbl">الإشعارات اليومية</span>
+            </div>
+            <label class="switch-control">
+              <input type="checkbox" id="settings-toggle-notifs" checked>
+              <span class="switch-slider"></span>
+            </label>
+          </div>
+
+          <!-- Setting 4: Language indicator -->
+          <div id="settings-row-lang" class="settings-row" style="cursor: pointer;">
+            <div class="settings-row-info">
+              <div class="settings-row-icon icon-green"><i class="fa-solid fa-globe"></i></div>
+              <span id="settings-lang-lbl" class="settings-row-lbl">لغة اللعبة</span>
+            </div>
+            <span id="settings-lang-val" style="font-weight: 800; color: #00E5FF; font-size: 14px;">العربية (RTL)</span>
+          </div>
+
+          <!-- Setting 5: Game version/about -->
+          <div id="settings-version-lbl" class="settings-version">
+            نسخة اللعبة: 1.2.0 (Premium)
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================================
+         MODAL: REWARDED AD MODAL (modal-rewarded-ad)
+         ======================================================== -->
+    <div id="modal-rewarded-ad" class="modal-overlay">
+      <div class="modal-card">
+        <!-- Close button (x) at top-corner -->
+        <button id="reward-ad-close-btn" class="modal-close-btn">&times;</button>
+
+        <!-- Header/Gift icon decoration -->
+        <div class="modal-ad-icon-wrapper">
+          <i class="fa-solid fa-gift ad-gift-icon"></i>
+        </div>
+
+        <!-- Modal Title -->
+        <h3 id="reward-ad-title" class="modal-title">احصل على عملات مجانية! 🪙</h3>
+
+        <!-- Modal Description -->
+        <p id="reward-ad-desc" class="modal-desc">شاهد إعلاناً قصيراً للحصول على 50 عملة مجانية!</p>
+
+        <!-- Fake Video Ad Screen Container (Initially hidden) -->
+        <div id="ad-video-container" class="ad-video-container" style="display: none;">
+          <div class="ad-video-player">
+            <!-- Simulated play state: a spinning loader and countdown timer -->
+            <div class="ad-video-spinner"><i class="fa-solid fa-circle-notch fa-spin"></i></div>
+            <div id="ad-video-countdown" class="ad-video-countdown">5</div>
+            <!-- Interactive cartoon video scene placeholder -->
+            <div class="ad-video-scene">
+              <i class="fa-solid fa-play ad-play-icon"></i>
+              <div id="reward-ad-scene-text" class="ad-scene-text">Premium Ad Scene</div>
+            </div>
+            <!-- Progress Bar -->
+            <div class="ad-video-progress-container">
+              <div id="ad-video-progress-fill" class="ad-video-progress-fill" style="width: 0%;"></div>
+            </div>
+          </div>
+          <span id="reward-ad-playing-text" class="ad-playing-text">جاري عرض الإعلان...</span>
+        </div>
+
+        <!-- Success Checkbox (Initially hidden) -->
+        <div id="ad-success-container" class="ad-success-container" style="display: none;">
+          <div class="ad-success-icon-wrapper">
+            <i class="fa-solid fa-circle-check success-check-icon"></i>
+          </div>
+          <span id="reward-ad-success-text" class="ad-success-text">تمت إضافة 50 عملة ذهبية! 🪙</span>
+        </div>
+
+        <!-- Action Buttons inside Modal -->
+        <div class="modal-actions">
+          <button id="reward-ad-btn-watch" class="btn-game btn-yellow">شاهد الآن</button>
+          <button id="reward-ad-btn-claim" class="btn-game btn-green" style="display: none;">استلام المكافأة</button>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end .phone-mockup -->
+
+  <!-- ========================================================
+       MODAL: CUSTOM GAME ALERT (game-alert-modal)
+       Outside phone-mockup so position:fixed covers full viewport
+       ======================================================== -->
+  <div id="game-alert-modal" class="game-alert-overlay">
+    <div class="game-alert-card">
+      <!-- Animated icon area -->
+      <div class="game-alert-icon-wrap">
+        <div class="game-alert-icon-ring"></div>
+        <i id="game-alert-icon" class="fa-solid fa-star game-alert-icon"></i>
+      </div>
+
+      <!-- Title -->
+      <h3 id="game-alert-title" class="game-alert-title"></h3>
+
+      <!-- Message -->
+      <p id="game-alert-message" class="game-alert-message"></p>
+
+      <!-- OK Button -->
+      <button id="game-alert-ok-btn" class="btn-game btn-yellow game-alert-btn">
+        حسناً
+      </button>
+    </div>
+  </div>
+
+  <!-- Questions Database -->
+  <script src="questions.js"></script>
+  <!-- Client JavaScript Interaction Logic -->
+  <script src="app.js"></script>
+</body>
+
+</html>
